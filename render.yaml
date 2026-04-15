@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: codograph
+    runtime: python
+    buildCommand: |
+      apt-get update
+      apt-get install -y graphviz
+      pip install -r requirements.txt
+    startCommand: gunicorn Codograph.wsgi:application

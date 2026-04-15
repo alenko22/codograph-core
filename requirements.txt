@@ -4,3 +4,4 @@ whitenoise
 graphviz
 code_flowchart
 pyflowchart
+python-decouple
