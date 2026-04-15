@@ -1,0 +1,44 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Flowchart</title>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.17.1/flowchart.min.js"></script>
+                </head>
+                <body>
+                    <div id="diagram"></div>
+                    <script>
+                        var diagram = flowchart.parse(`st182=>start: start check_triangle
+io184=>inputoutput: input: a, b, c
+cond188=>condition: if a + b > c and a + c > b and (b + c > a)
+cond193=>condition: if a == b == c
+io200=>inputoutput: output: 'Равносторонний'
+e198=>end: end function return
+cond206=>condition: if a == b or a == c or b == c
+io213=>inputoutput: output: 'Равнобедренный'
+e211=>end: end function return
+io221=>inputoutput: output: 'Разносторонний'
+e219=>end: end function return
+io231=>inputoutput: output: 'Не треугольник'
+e229=>end: end function return
+
+st182->io184
+io184->cond188
+cond188(yes)->cond193
+cond193(yes)->io200
+io200->e198
+cond193(no)->cond206
+cond206(yes)->io213
+io213->e211
+cond206(no)->io221
+io221->e219
+cond188(no)->io231
+io231->e229
+`);
+                        diagram.drawSVG('diagram');
+                    </script>
+                </body>
+                </html>
+                

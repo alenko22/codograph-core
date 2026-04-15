@@ -1,0 +1,32 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Flowchart</title>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.17.1/flowchart.min.js"></script>
+                </head>
+                <body>
+                    <div id="diagram"></div>
+                    <script>
+                        var diagram = flowchart.parse(`st97=>start: start factorial
+io99=>inputoutput: input: n
+cond103=>condition: if n <= 1
+io110=>inputoutput: output: 1
+e108=>end: end function return
+io118=>inputoutput: output: n * factorial(n - 1)
+e116=>end: end function return
+
+st97->io99
+io99->cond103
+cond103(yes)->io110
+io110->e108
+cond103(no)->io118
+io118->e116
+`);
+                        diagram.drawSVG('diagram');
+                    </script>
+                </body>
+                </html>
+                

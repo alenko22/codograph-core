@@ -1,0 +1,33 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Flowchart</title>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.17.1/flowchart.min.js"></script>
+                </head>
+                <body>
+                    <div id="diagram"></div>
+                    <script>
+                        var diagram = flowchart.parse(`st56=>start: start sum_even
+io58=>inputoutput: input: start, end
+op61=>operation: total = 0
+cond64=>condition: for num in range(start, end + 1)
+cond69=>operation: total = total + num if  num % 2 == 0
+io84=>inputoutput: output: total
+e82=>end: end function return
+
+st56->io58
+io58->op61
+op61->cond64
+cond64(yes)->cond69
+cond69->cond64
+cond64(no)->io84
+io84->e82
+`);
+                        diagram.drawSVG('diagram');
+                    </script>
+                </body>
+                </html>
+                

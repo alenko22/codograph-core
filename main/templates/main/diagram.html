@@ -1,0 +1,142 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}FlowCraft — Ваша диаграмма{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-diagram-project me-2" style="color: #0d6efd;"></i>Редактор диаграммы</h1>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Назад
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-code me-2"></i>Ваш код
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="codeInput" class="form-label">Python код:</label>
+                            <textarea
+                                class="form-control font-monospace"
+                                id="codeInput"
+                                name="code"
+                                rows="14"
+                                style="font-size: 14px;"
+                            >{{ code }}</textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-sync-alt me-2"></i>Обновить диаграмму
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <i class="fas fa-project-diagram me-2"></i>Блок-схема
+                </div>
+                <div class="card-body">
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+
+                    <div id="diagram-container" style="overflow: auto; max-height: 600px;">
+                        {% if success %}
+                            <div id="diagram"></div>
+                        {% else %}
+                            <p class="text-muted text-center">Введите код и нажмите «Обновить диаграмму»</p>
+                        {% endif %}
+                    </div>
+
+                    {% if success %}
+                    <div class="mt-3 d-flex gap-2">
+                        <button class="btn btn-outline-primary" onclick="downloadHTML()">
+                            <i class="fas fa-download me-2"></i>Скачать HTML
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="downloadSVG()">
+                            <i class="fas fa-file-image me-2"></i>Скачать SVG
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Подключаем библиотеки только если диаграмма будет рисоваться #}
+{% if success %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.17.1/flowchart.min.js"></script>
+    <script>
+        // Рендерим диаграмму из переданного DSL
+        var dsl = `{{ dsl_code|safe }}`;
+        var diagram = flowchart.parse(dsl);
+        diagram.drawSVG('diagram');
+
+        // Функция для скачивания HTML-файла
+        function downloadHTML() {
+            const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Flowchart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"><\/script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.17.1/flowchart.min.js"><\/script>
+</head>
+<body>
+    <div id="diagram"></div>
+    <script>
+        var diagram = flowchart.parse(\`${dsl}\`);
+        diagram.drawSVG('diagram');
+    <\/script>
+</body>
+</html>`;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'flowchart.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Функция для скачивания SVG (получаем из уже отрисованного элемента)
+        function downloadSVG() {
+            const svgElement = document.querySelector('#diagram svg');
+            if (!svgElement) {
+                alert('SVG элемент не найден');
+                return;
+            }
+            const serializer = new XMLSerializer();
+            let svgString = serializer.serializeToString(svgElement);
+            // Добавляем XML декларацию для корректного отображения
+            svgString = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgString;
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'flowchart.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+{% endif %}
+{% endblock %}

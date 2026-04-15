@@ -1,0 +1,33 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Flowchart</title>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.17.1/flowchart.min.js"></script>
+                </head>
+                <body>
+                    <div id="diagram"></div>
+                    <script>
+                        var diagram = flowchart.parse(`op33=>operation: x = 10
+op35=>operation: y = 20
+cond38=>condition: if x > y
+sub42=>subroutine: print('x больше y')
+op49=>operation: z = x + y
+sub51=>subroutine: print(f'Сумма: {z}')
+sub46=>subroutine: print('y больше или равно x')
+
+op33->op35
+op35->cond38
+cond38(yes)->sub42
+sub42->op49
+op49->sub51
+cond38(no)->sub46
+sub46->op49
+`);
+                        diagram.drawSVG('diagram');
+                    </script>
+                </body>
+                </html>
+                

@@ -1,0 +1,32 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Flowchart</title>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.17.1/flowchart.min.js"></script>
+                </head>
+                <body>
+                    <div id="diagram"></div>
+                    <script>
+                        var diagram = flowchart.parse(`st3=>start: start max_of_two
+io5=>inputoutput: input: a, b
+cond9=>condition: if a > b
+io16=>inputoutput: output: a
+e14=>end: end function return
+io24=>inputoutput: output: b
+e22=>end: end function return
+
+st3->io5
+io5->cond9
+cond9(yes)->io16
+io16->e14
+cond9(no)->io24
+io24->e22
+`);
+                        diagram.drawSVG('diagram');
+                    </script>
+                </body>
+                </html>
+                
